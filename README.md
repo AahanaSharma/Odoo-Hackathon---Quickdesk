@@ -4,7 +4,7 @@ A lightweight and intuitive help desk ticketing system developed for Odoo Hackat
 
 ## 👩‍💻 Team Members
 
-- Aahana Sharma (Team Leader)
-- Ankita
-- Abhishek Adhikari
+- Aahana Sharma (Team Leader) : {agent dashboard login , agent dashboard page , front page ,Linked all HTML pages  and ensured smooth navigation across the app.}
+- Ankita : {submit tickets and view ticket details page}
+- Abhishek Adhikari :{ login page and front page}
 - Arpit
