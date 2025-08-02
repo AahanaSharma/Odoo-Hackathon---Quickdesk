@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuickDesk Support</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fffbe0, #ffe169);
+      color: #111827;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff8dc;
+      padding: 20px 40px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #facc15;
+      letter-spacing: 1px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 32px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #111827;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: color 0.2s, font-weight 0.2s;
+    }
+
+    nav ul li a:hover {
+      color: #f59e0b;
+      font-weight: 800;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 100px 20px 60px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 32px;
+      color: #1a1a1a;
+    }
+
+    .card-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 50px 40px;
+      width: 280px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(250, 202, 21, 0.3);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(234, 179, 8, 0.45);
+    }
+
+    .card i {
+      font-size: 3.2rem;
+      margin-bottom: 20px;
+      color: #facc15;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav ul {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Q</div>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="ticket.html">Submit Ticket</a></li>
+      <li><a href="view-tickets.html">View Tickets</a></li>
+      <li><a href="agent_login.html">Agent Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>Welcome to <span style="color:#facc15;">QuickDesk</span> Support</h1>
+    <div class="card-container">
+      <a href="#" style="text-decoration: none;"><div class="card">
+        <i class="fas fa-file-alt"></i>
+        <h3>Submit a Ticket</h3>
+      </div></a>
+      <a href="#" style="text-decoration: none;"><div class="card">
+        <i class="fas fa-ticket-alt"></i>
+        <h3>View Your Tickets</h3>
+      </div></a>
+    </div>
+  </section>
+
+</body>
+</html>
+
+
+

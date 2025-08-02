@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuickDesk Agent Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+    background: linear-gradient(135deg, #fffbe0 0%, #ffe5b4 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .main-content {
+      max-width: 1100px;
+      margin: 40px auto 0 auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.08);
+      padding: 32px 40px 40px 40px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      color: #3a86ff;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #555;
+      font-size: 1.1rem;
+    }
+    .create-ticket-container {
+      text-align: right;
+      margin-bottom: 18px;
+    }
+    .btn-create-ticket {
+      background: linear-gradient(90deg, #ffbe0b 0%, #fb5607 100%);
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(251,86,7,0.08);
+      transition: background 0.2s;
+    }
+    .btn-create-ticket:hover {
+      background: linear-gradient(90deg, #fb5607 0%, #ffbe0b 100%);
+    }
+    .queue-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+      justify-content: center;
+    }
+    .tab-btn {
+      background: #e0e7ff;
+      color: #3a86ff;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background: #3a86ff;
+      color: #fff;
+      font-weight: bold;
+    }
+    .tickets-section h2 {
+      color: #fb5607;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .filter-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+    #statusFilter {
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid #3a86ff;
+      font-size: 1rem;
+      background: #e0e7ff;
+      color: #3a86ff;
+    }
+    .tickets-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 18px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(58,134,255,0.07);
+    }
+    .tickets-table th, .tickets-table td {
+      padding: 14px 10px;
+      text-align: left;
+    }
+    .tickets-table th {
+      background: #3a86ff;
+      color: #fff;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .tickets-table tr {
+      border-bottom: 1px solid #e0e7ff;
+    }
+    .tickets-table tr:last-child {
+      border-bottom: none;
+    }
+    .tickets-table td {
+      font-size: 0.98rem;
+      color: #222;
+    }
+    .status {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: inline-block;
+    }
+    .status.open { background: #e0f7fa; color: #00b4d8; }
+    .status.inprogress { background: #fff3cd; color: #f9a826; }
+    .status.closed { background: #e0e7ff; color: #3a86ff; }
+    .btn {
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      margin-right: 4px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-reply { background: #3a86ff; color: #fff; }
+    .btn-share { background: #ffbe0b; color: #fff; }
+    .btn-update { background: #fb5607; color: #fff; }
+    .btn-comment { background: #8338ec; color: #fff; }
+    .btn:hover { opacity: 0.85; }
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0; top: 0; width: 100%; height: 100%;
+      overflow: auto; background: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background: #fff; margin: 7% auto; padding: 24px; border-radius: 12px;
+      width: 420px; position: relative; box-shadow: 0 4px 24px rgba(58,134,255,0.15);
+    }
+    .close {
+      position: absolute; right: 16px; top: 12px; font-size: 28px; cursor: pointer;
+      color: #fb5607;
+    }
+    #replyText, #commentText {
+      width: 100%; margin: 12px 0; padding: 8px; border-radius: 6px; border: 1px solid #e0e7ff;
+      font-size: 1rem;
+    }
+    .btn-send-reply, .btn-send-comment {
+      background: #3a86ff; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;
+      margin-top: 8px;
+    }
+    .modal-title {
+      color: #3a86ff;
+      margin-bottom: 8px;
+      font-size: 1.15rem;
+    }
+    .notification-bar {
+      background: linear-gradient(90deg, #43aa8b 0%, #3a86ff 100%);
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 1.08rem;
+      border-radius: 0 0 12px 12px;
+      margin-bottom: 18px;
+      letter-spacing: 0.5px;
+    }
+    .analytics-cards {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: linear-gradient(120deg, #e0e7ff 0%, #fff 100%);
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(58,134,255,0.07);
+      padding: 18px 28px;
+      min-width: 160px;
+      text-align: center;
+      color: #3a86ff;
+      font-size: 1.1rem;
+      font-weight: 500;
+      position: relative;
+    }
+    .card i {
+      font-size: 1.7rem;
+      margin-bottom: 6px;
+      color: #fb5607;
+    }
+    .card .card-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #222;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="notification-bar">
+      <i class="fas fa-bell"></i> Welcome back, Agent! You have <b>2</b> new tickets and <b>1</b> pending reply.
+    </div>
+    <header>
+      <h1>QuickDesk Agent Dashboard</h1>
+      <p class="subtitle">Resolve tickets efficiently, track your progress, and collaborate with your team.</p>
+    </header>
+    <div class="analytics-cards">
+      <div class="card">
+        <i class="fas fa-ticket-alt"></i>
+        <div>Open Tickets</div>
+        <div class="card-value" id="openCount">1</div>
+      </div>
+      <div class="card">
+        <i class="fas fa-spinner"></i>
+        <div>In Progress</div>
+        <div class="card-value" id="progressCount">1</div>
+      </div>
+      <div class="card">
+        <i class="fas fa-check-circle"></i>
+        <div>Closed</div>
+        <div class="card-value" id="closedCount">1</div>
+      </div>
+      <div class="card">
+        <i class="fas fa-users"></i>
+        <div>Team Online</div>
+        <div class="card-value">3</div>
+      </div>
+    </div>
+    <div class="create-ticket-container">
+      <button class="btn btn-create-ticket" onclick="openTicketForm()">+ Create Ticket</button>
+    </div>
+    <div class="queue-tabs">
+      <button class="tab-btn active" id="myTicketsBtn">My Tickets</button>
+      <button class="tab-btn" id="allTicketsBtn">All Tickets</button>
+    </div>
+    <section class="tickets-section">
+      <h2>Ticket Overview</h2>
+      <div class="filter-bar">
+        <select id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="open">Open</option>
+          <option value="inprogress">In Progress</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+      <table class="tickets-table" id="ticketsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Issue Title</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-assigned="john.doe" data-status="open">
+            <td>#101</td>
+            <td>John Doe</td>
+            <td>Cannot login</td>
+            <td><span class="status open">Open</span></td>
+            <td>High</td>
+            <td>2025-07-31</td>
+            <td>
+              <button class="btn btn-reply" onclick="replyTicket('#101')">Reply</button>
+              <button class="btn btn-share" onclick="shareTicket('#101')">Share</button>
+              <button class="btn btn-update" onclick="updateTicket('#101')">Update</button>
+              <button class="btn btn-comment" onclick="commentTicket('#101')">Comment</button>
+            </td>
+          </tr>
+          <tr data-assigned="jane.smith" data-status="inprogress">
+            <td>#102</td>
+            <td>Jane Smith</td>
+            <td>Page not loading</td>
+            <td><span class="status inprogress">In Progress</span></td>
+            <td>Medium</td>
+            <td>2025-07-30</td>
+            <td>
+              <button class="btn btn-reply" onclick="replyTicket('#102')">Reply</button>
+              <button class="btn btn-share" onclick="shareTicket('#102')">Share</button>
+              <button class="btn btn-update" onclick="updateTicket('#102')">Update</button>
+              <button class="btn btn-comment" onclick="commentTicket('#102')">Comment</button>
+            </td>
+          </tr>
+          <tr data-assigned="john.doe" data-status="closed">
+            <td>#103</td>
+            <td>John Doe</td>
+            <td>Error on checkout</td>
+            <td><span class="status closed">Closed</span></td>
+            <td>Low</td>
+            <td>2025-07-29</td>
+            <td>
+              <button class="btn btn-reply" onclick="replyTicket('#103')">Reply</button>
+              <button class="btn btn-share" onclick="shareTicket('#103')">Share</button>
+              <button class="btn btn-update" onclick="updateTicket('#103')">Update</button>
+              <button class="btn btn-comment" onclick="commentTicket('#103')">Comment</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <div id="replyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeReplyModal()">&times;</span>
+      <div class="modal-title">Reply to Ticket <span id="modalTicketId"></span></div>
+      <textarea id="replyText" rows="5" placeholder="Type your reply here..."></textarea>
+      <button class="btn-send-reply" id="sendReplyBtn">Send Reply</button>
+    </div>
+  </div>
+  <div id="commentModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeCommentModal()">&times;</span>
+      <div class="modal-title">Add Comment to Ticket <span id="commentTicketId"></span></div>
+      <textarea id="commentText" rows="4" placeholder="Type your comment..."></textarea>
+      <button class="btn-send-comment" onclick="sendComment()">Add Comment</button>
+    </div>
+  </div>
+  <div id="updateModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeUpdateModal()">&times;</span>
+      <div class="modal-title">Update Ticket <span id="updateTicketId"></span></div>
+      <input id="updateTitle" type="text" placeholder="Update issue title"/>
+      <select id="updateStatus">
+        <option value="open">Open</option>
+        <option value="inprogress">In Progress</option>
+        <option value="closed">Closed</option>
+      </select>
+      <button class="btn-send-reply" onclick="sendUpdate()">Update Ticket</button>
+    </div>
+  </div>
+
+  <script>
+    const loggedInAgent = 'john.doe';
+    let currentReplyTicketId = null;
+
+    function showQueue(queue) {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      tabBtns.forEach(btn => btn.classList.remove('active'));
+      if(queue === 'my') {
+        tabBtns[0].classList.add('active');
+      } else {
+        tabBtns[1].classList.add('active');
+      }
+      const tickets = document.querySelectorAll('#ticketsTable tbody tr');
+      tickets.forEach(row => {
+        if(queue === 'my') {
+          row.style.display = row.getAttribute('data-assigned') === loggedInAgent ? '' : 'none';
+        } else {
+          row.style.display = '';
+        }
+      });
+      filterTickets();
+      updateAnalytics();
+    }
+
+    function filterTickets() {
+      const statusFilter = document.getElementById('statusFilter').value;
+      const queue = document.querySelector('.tab-btn.active').textContent.trim().toLowerCase();
+      const tickets = document.querySelectorAll('#ticketsTable tbody tr');
+      tickets.forEach(row => {
+        let showRow = true;
+        if(queue === 'my tickets') {
+          showRow = row.getAttribute('data-assigned') === loggedInAgent;
+        }
+        const status = row.getAttribute('data-status');
+        if((statusFilter === 'all' || status === statusFilter) && showRow) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      updateAnalytics();
+    }
+
+    function updateAnalytics() {
+      const tickets = document.querySelectorAll('#ticketsTable tbody tr');
+      let open = 0, progress = 0, closed = 0;
+      tickets.forEach(row => {
+        if(row.style.display === 'none') return;
+        const status = row.getAttribute('data-status');
+        if(status === 'open') open++;
+        if(status === 'inprogress') progress++;
+        if(status === 'closed') closed++;
+      });
+      document.getElementById('openCount').textContent = open;
+      document.getElementById('progressCount').textContent = progress;
+      document.getElementById('closedCount').textContent = closed;
+    }
+
+    function replyTicket(ticketId) {
+      currentReplyTicketId = ticketId;
+      document.getElementById('replyModal').style.display = 'block';
+      document.getElementById('modalTicketId').textContent = ticketId;
+      document.getElementById('replyText').value = '';
+    }
+    function closeReplyModal() {
+      document.getElementById('replyModal').style.display = 'none';
+      currentReplyTicketId = null;
+    }
+    function sendReply() {
+      const reply = document.getElementById('replyText').value;
+      if(reply.trim() === '') {
+        alert('Please enter a reply.');
+        return;
+      }
+      alert(`Reply sent for ${currentReplyTicketId}: ${reply}`);
+      closeReplyModal();
+    }
+    document.getElementById('sendReplyBtn').onclick = sendReply;
+
+    function commentTicket(ticketId) {
+      document.getElementById('commentModal').style.display = 'block';
+      document.getElementById('commentTicketId').textContent = ticketId;
+      document.getElementById('commentText').value = '';
+    }
+    function closeCommentModal() {
+      document.getElementById('commentModal').style.display = 'none';
+    }
+    function sendComment() {
+      const ticketId = document.getElementById('commentTicketId').textContent;
+      const comment = document.getElementById('commentText').value;
+      if(comment.trim() === '') {
+        alert('Please enter a comment.');
+        return;
+      }
+      alert(`Comment added for ${ticketId}: ${comment}`);
+      closeCommentModal();
+    }
+
+    function updateTicket(ticketId) {
+      document.getElementById('updateModal').style.display = 'block';
+      document.getElementById('updateTicketId').textContent = ticketId;
+      document.getElementById('updateTitle').value = '';
+      document.getElementById('updateStatus').value = 'open';
+    }
+    function closeUpdateModal() {
+      document.getElementById('updateModal').style.display = 'none';
+    }
+    function sendUpdate() {
+      const ticketId = document.getElementById('updateTicketId').textContent;
+      const title = document.getElementById('updateTitle').value;
+      const status = document.getElementById('updateStatus').value;
+      alert(`Ticket ${ticketId} updated. New title: ${title}, Status: ${status}`);
+      closeUpdateModal();
+    }
+
+    function shareTicket(ticketId) {
+      alert(`Share action for ticket ${ticketId} - you can implement sharing options here.`);
+    }
+
+    function openTicketForm() {
+      alert('Open ticket creation form/modal here');
+    }
+
+    document.getElementById('myTicketsBtn').onclick = function() {
+      showQueue('my');
+    };
+    document.getElementById('allTicketsBtn').onclick = function() {
+      showQueue('all');
+    };
+    document.getElementById('statusFilter').onchange = function() {
+      filterTickets();
+    };
+
+    showQueue('my');
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Tickets | QuickDesk</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fff8dc; /* light yellowish background */
+      padding: 40px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #a67c00;
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    #filter-bar {
+      max-width: 900px;
+      margin: 0 auto 30px auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      background: #fff3b0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #emailFilter, #categoryFilter, #sortOption {
+      padding: 10px 15px;
+      font-size: 16px;
+      width: 30%;
+      min-width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fffbe6;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border: 1px solid #e0d97c;
+      text-align: left;
+    }
+
+    th {
+      background: #f5d76e;
+      color: #333;
+      font-weight: bold;
+    }
+
+    td {
+      color: #444;
+    }
+
+    tr:nth-child(even) {
+      background: #fff9d1;
+    }
+
+    tr:hover {
+      background-color: #fff6b3;
+    }
+
+    @media screen and (max-width: 768px) {
+      #filter-bar {
+        flex-direction: column;
+      }
+      #emailFilter, #categoryFilter, #sortOption {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2> My Support Tickets</h2>
+
+  <div id="filter-bar">
+    <input type="email" id="emailFilter" placeholder="Enter your email" />
+    <select id="categoryFilter">
+      <option value="">All Categories</option>
+      <option value="Login Issue">Login Issue</option>
+      <option value="Payment Problem">Payment Problem</option>
+      <option value="Technical Problem">Technical Problem</option>
+      <option value="Bug/Error">Bug/Error</option>
+      <option value="Performance Issue">Performance/Speed Issue</option>
+      <option value="UI Problem">UI/UX Problem</option>
+      <option value="Security Concern">Security or Privacy Concern</option>
+      <option value="Email Problem">Email or Notification Issue</option>
+      <option value="Installation Problem">Installation or Update Issue</option>
+      <option value="API/Integration Issue">API or Integration Issue</option>
+      <option value="Missing/Broken Content">Missing or Broken Content</option>
+      <option value="Data Problem">Data Saving or Sync Issue</option>
+      <option value="Feedback">Feedback / Suggestion</option>
+      <option value="Help Needed">Help / Onboarding Support</option>
+      <option value="Other">Other</option>
+      <!-- Add more if needed -->
+    </select>
+    <select id="sortOption">
+      <option value="recent">Sort by: Recently Modified</option>
+      <option value="replied">Sort by: Most Replied</option>
+    </select>
+  </div>
+
+  <table id="ticketTable">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Last Modified</th>
+        <th>Replies</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Tickets will be injected here -->
+    </tbody>
+  </table>
+
+  <script>
+    function loadTickets() {
+      const email = document.getElementById("emailFilter").value.trim();
+      const category = document.getElementById("categoryFilter").value;
+      const sortOption = document.getElementById("sortOption").value;
+
+      let tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+
+      if (email) {
+        tickets = tickets.filter(t => t.email.toLowerCase() === email.toLowerCase());
+      } else {
+        document.querySelector("#ticketTable tbody").innerHTML = "<tr><td colspan='5'>Enter your email to view tickets.</td></tr>";
+        return;
+      }
+
+      if (category) {
+        tickets = tickets.filter(t => t.category === category);
+      }
+
+      if (sortOption === "recent") {
+        tickets.sort((a, b) => new Date(b.modifiedAt || b.createdAt) - new Date(a.modifiedAt || a.createdAt));
+      } else if (sortOption === "replied") {
+        tickets.sort((a, b) => (b.replies || 0) - (a.replies || 0));
+      }
+
+      const tbody = document.querySelector("#ticketTable tbody");
+      if (tickets.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5'>No tickets found.</td></tr>";
+        return;
+      }
+
+      tbody.innerHTML = "";
+      tickets.forEach(ticket => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${ticket.subject || "(no subject)"}</td>
+          <td>${ticket.category || "—"}</td>
+          <td>${ticket.status || "Open"}</td>
+          <td>${ticket.modifiedAt || ticket.createdAt}</td>
+          <td>${ticket.replies || 0}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    document.getElementById("emailFilter").addEventListener("input", loadTickets);
+    document.getElementById("categoryFilter").addEventListener("change", loadTickets);
+    document.getElementById("sortOption").addEventListener("change", loadTickets);
+  </script>
+
+</body>
+</html>

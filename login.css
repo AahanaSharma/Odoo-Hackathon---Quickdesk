@@ -1,0 +1,92 @@
+
+
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #bfc0c1, #505051);
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  transition: 0.3s ease;
+  align-items: center;
+ background-image: url(bgimg.png);
+ background-size: cover;        
+  background-position: center; 
+}
+
+
+.login-container {
+  background-color: #161617;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 12px 25px rgba(120, 75, 75, 0.1);
+  width: 850px;
+  text-align: center;
+  
+}
+
+.login-container:hover {
+  transform: translateY(-5px);
+}
+
+h1 {
+  color: #f0f0f0;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.tagline {
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-size:larger;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  box-sizing: border-box;
+  transition: border 0.2s;
+  text-align: center;
+}
+
+input:focus {
+  border-color: #6366f1;
+  outline: none;
+}
+
+button {
+  background-color: #6366f1;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #4f46e5;
+}
+
+.forgot {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.forgot a {
+  color: #4f46e5;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgot a:hover {
+  color: #3730a3;
+}
